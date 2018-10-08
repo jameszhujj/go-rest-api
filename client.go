@@ -71,12 +71,16 @@ type Client struct {
 // error, it will be returned as ErrorResponse instance
 // typed as the error, containing all codes,
 // descriptions and properies.
-func NewV2(accessKey string) *Client {
+func NewV2(accessKey string, httpClient *http.Client) *Client {
+	if httpClient == nil {
+		httpClient = &http.Client{
+			Timeout: httpClientTimeout,
+		}
+	}
+
 	return &Client{
 		AccessKey: accessKey,
-		HTTPClient: &http.Client{
-			Timeout: httpClientTimeout,
-		},
+		HTTPClient: httpClient,
 		request: requestV2,
 	}
 }
